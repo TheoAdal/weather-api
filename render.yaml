@@ -1,0 +1,35 @@
+# render.yaml
+services:
+  - type: web
+    name: weather-api
+    runtime: node
+    buildCommand: npm install
+    startCommand: node server.js
+    env: node
+    region: ohio # or any preferred region
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000 # Render's default port
+      - key: API_USERNAME
+        fromService:
+          name: weather-api
+          type: env
+          key: API_USERNAME
+      - key: API_PASSWORD
+        fromService:
+          name: weather-api
+          type: env
+          key: API_PASSWORD
+    database:
+      name: weather-db
+      postgresVersion: 14
+    healthCheckPath: /health
+    autoDeploy: true
+
+databases:
+  - name: weather-db
+    plan: free # Upgrade to "starter" for production
+    region: ohio
+    postgresVersion: 14
