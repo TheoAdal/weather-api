@@ -1,0 +1,22 @@
+# Sensitive data
+.env
+config.js
+*.pem
+*.key
+
+# Dependencies
+node_modules/
+
+# Database files
+*.sql
+*.db
+
+# Environment files
+.env.local
+.env.development
+.env.production
+
+# IDE files
+.idea/
+.vscode/
+*.swp
