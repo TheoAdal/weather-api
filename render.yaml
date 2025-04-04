@@ -23,13 +23,13 @@ services:
           type: env
           key: API_PASSWORD
     database:
-      name: weather-db
+      name: weather
       postgresVersion: 14
     healthCheckPath: /health
     autoDeploy: true
 
 databases:
-  - name: weather-db
+  - name: weather
     plan: free # Upgrade to "starter" for production
     region: ohio
     postgresVersion: 14
