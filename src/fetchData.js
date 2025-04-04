@@ -85,7 +85,7 @@ async function fetchWeather() {
             ]);
           } catch (dateError) {
             console.error(
-              `⚠️ Invalid date format for ${city.name}:`,
+              `Invalid date format for ${city.name}:`,
               dateError.message
             );
             continue;
@@ -104,14 +104,14 @@ async function fetchWeather() {
           `✅ Successfully processed ${city.name} (${forecasts.length} records)`
         );
       } catch (cityError) {
-        console.error(`❌ Failed to process ${city.name}:`, cityError.message);
+        console.error(`XXX Failed to process ${city.name}:`, cityError.message);
       }
     }
   } catch (error) {
-    console.error("💥 Critical error:", error.message);
+    console.error("Critical error:", error.message);
   } finally {
     pool.end();
-    console.log("🏁 Data fetch process completed");
+    console.log("Data fetch process completed");
   }
 }
 
