@@ -1,6 +1,5 @@
 # Sensitive data
 .env
-config.js
 *.pem
 *.key
 
