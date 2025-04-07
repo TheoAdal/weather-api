@@ -53,24 +53,36 @@ router.get("/forecasts/average", async (req, res) => {
     await pool.query("SET time_zone = '+00:00'");
 
     const query = `
+      WITH ranked_forecasts AS (
+        SELECT 
+          f.id,
+          f.location_id,
+          f.temperature,
+          f.date,
+          l.name,
+          ROW_NUMBER() OVER (
+            PARTITION BY l.id, DATE(f.date) 
+            ORDER BY f.created_at DESC
+          ) as forecast_rank
+        FROM forecasts f
+        JOIN locations l ON f.location_id = l.id
+      )
       SELECT 
-        l.id, 
-        l.name, 
-        DATE_FORMAT(f.date, '%Y-%m-%d') as date,
-        ROUND(AVG(f.temperature), 1) as avg_temperature,
-        ROUND(AVG(f.humidity), 1) as avg_humidity,
-        ROUND(AVG(f.wind_speed), 1) as avg_wind_speed,
-        COUNT(*) as data_entries                      -- How many entries there are for the same date
-      FROM locations l
-      JOIN forecasts f ON l.id = f.location_id
+        location_id as id,
+        name,
+        DATE_FORMAT(date, '%Y-%m-%d') as date,
+        ROUND(AVG(temperature), 1) as avg_temperature,
+        COUNT(*) as data_entries
+      FROM ranked_forecasts
+      WHERE forecast_rank <= 3  -- Only include last 3 forecasts per day
       GROUP BY 
-        l.id, 
-        l.name, 
-        DATE_FORMAT(f.date, '%Y-%m-%d'),
-        DATE(f.date)                        
+        location_id, 
+        name, 
+        DATE_FORMAT(date, '%Y-%m-%d'),
+        DATE(date)
       ORDER BY 
-        l.name,  
-        DATE(f.date)                        
+        name, 
+        DATE(date)
     `;
 
     const [results] = await pool.query(query);
