@@ -7,7 +7,7 @@
 node_modules/
 
 # Database files
-*.sql
+#*.sql
 *.db
 
 # Environment files
